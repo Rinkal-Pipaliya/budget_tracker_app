@@ -1,3 +1,4 @@
+import 'package:budget_tracker_app/model/category_model.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
@@ -65,8 +66,35 @@ class DBHelper {
   }
 
   // TODO: FETCH ALL DATA
-  Future<void> fetchCategory() async {
+  Future<List<CategoryModel>> fetchCategory() async {
     await initDB();
+
+    String query = "SELECT * FROM $categoryTable;";
+
+    List<Map<String, dynamic>> res = await db?.rawQuery(query) ?? [];
+
+    return res
+        .map(
+          (e) => CategoryModel.mapToModel(m1: e),
+        )
+        .toList();
+  }
+
+  Future<List<CategoryModel>> liveSearchCategory({
+    required String search,
+  }) async {
+    await initDB();
+
+    String query =
+        "SELECT * FROM $categoryTable WHERE $categoryName LIKE '%$search%';";
+
+    List<Map<String, dynamic>> res = await db?.rawQuery(query) ?? [];
+
+    return res
+        .map(
+          (e) => CategoryModel.mapToModel(m1: e),
+        )
+        .toList();
   }
 
   // TODO: UPDATE DATA
