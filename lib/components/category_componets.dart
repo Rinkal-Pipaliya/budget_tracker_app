@@ -20,7 +20,6 @@ List<String> categoryImage = [
   "assets/image/withdraw.png",
   "assets/image/other.png",
 ];
-
 List<String> categoryNames = [
   "Bills",
   "Case",
@@ -157,7 +156,10 @@ class CategoryComponents extends StatelessWidget {
                       ByteData byteData = await rootBundle.load(assetPath);
                       Uint8List image = byteData.buffer.asUint8List();
 
-                      controller.insertCategory(name: name, image: image);
+                      controller.insertCategory(
+                        name: name,
+                        image: image,
+                      );
                     } else {
                       Get.snackbar(
                         "Required",
