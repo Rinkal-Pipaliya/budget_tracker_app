@@ -8,99 +8,99 @@ class CategoryController extends GetxController {
   int? categoryIndex;
   Future<List<CategoryModel>>? allCategory;
 
-  //default constructor
-  CategoryController() {
-    fetchCategory();
-  }
+  // Default Constructor
+  // CategoryController() {
+  //   fetchCategoryData();
+  // }
 
-  void getIndex({required int index}) {
+  void getCategoryIndex({required int index}) {
     categoryIndex = index;
+
     update();
   }
 
-  void assignDefaultIndex() {
+  void assignDefaultVal() {
     categoryIndex = null;
+
     update();
   }
 
-  // category record insertion
-
-  Future<void> insertCategory({
+  // Insert Category Record
+  Future<void> addCategoryData({
     required String name,
     required Uint8List image,
   }) async {
-    int? res = await DBHelper.helper.insertCategory(
-      name: name,
-      image: image,
-      index: categoryIndex!,
-    );
+    int? res = await DBHelper.helper
+        .insertCategory(name: name, image: image, index: categoryIndex!);
+
     if (res != null) {
       Get.snackbar(
-        "Success",
-        "$name category added successfully...!!: $res",
+        "Insert",
+        "$name category is inserted....$res",
         colorText: Colors.white,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.green.shade300,
       );
     } else {
       Get.snackbar(
-        "Error",
-        "$name category is not added..",
+        "Failed",
+        "$name category is Insertion failed....",
         colorText: Colors.white,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red.shade300,
       );
     }
   }
 
-  void fetchCategory() async {
+  // Fetch Records
+  void fetchCategoryData() {
     allCategory = DBHelper.helper.fetchCategory();
   }
 
-  // search category
-  void searchCategory({required String value}) async {
-    allCategory = DBHelper.helper.liveSearchCategory(search: value);
+  // Live Search
+  void searchData({required String val}) {
+    allCategory = DBHelper.helper.liveSearchCategory(search: val);
 
     update();
   }
 
-  // delete category
+  // Delete Record
   Future<void> deleteCategory({required int id}) async {
     int? res = await DBHelper.helper.deleteCategory(id: id);
+
     if (res != null) {
+      fetchCategoryData();
       Get.snackbar(
-        "Delete",
-        "Category deleted successfully...!!: $res",
-        colorText: Colors.white,
-        backgroundColor: Colors.green,
+        'DELETED',
+        "Category is deleted...",
+        backgroundColor: Colors.green.withOpacity(0.7),
       );
     } else {
       Get.snackbar(
-        "Error",
-        "Category is not deleted..",
-        colorText: Colors.white,
-        backgroundColor: Colors.red,
+        'Failed',
+        "Category is deletion failed...",
+        backgroundColor: Colors.red.withOpacity(0.7),
       );
     }
 
     update();
   }
 
-  // update category
+  // Update Record
+  Future<void> updateCategoryData({required CategoryModel model}) async {
+    int? res =
+        await DBHelper.helper.updateCategory(model: model, category: model);
 
-  void updateCategory({required CategoryModel category}) async {
-    int? res = await DBHelper.helper.updateCategory(category: category);
     if (res != null) {
+      fetchCategoryData();
       Get.snackbar(
-        "Update",
-        "${category.name} category updated successfully...!!: $res",
-        colorText: Colors.white,
-        backgroundColor: Colors.green,
+        'Update',
+        "Category is updated...",
+        backgroundColor: Colors.green.withOpacity(0.7),
       );
     } else {
       Get.snackbar(
-        "Error",
-        "${category.name} category is not updated..",
-        colorText: Colors.white,
-        backgroundColor: Colors.red,
+        'Failed',
+        "Category is updation failed...",
+        backgroundColor: Colors.red.withOpacity(0.7),
       );
     }
 

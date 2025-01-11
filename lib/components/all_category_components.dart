@@ -14,7 +14,7 @@ class AllCategoryComponents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CategoryController controller = Get.put(CategoryController());
-    controller.fetchCategory();
+    controller.fetchCategoryData();
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -23,7 +23,7 @@ class AllCategoryComponents extends StatelessWidget {
           TextField(
             onChanged: (value) async {
               log("DATA : $value");
-              controller.searchCategory(value: value);
+              controller.searchData(val: value);
             },
             decoration: InputDecoration(
               prefixIcon: const Icon(CupertinoIcons.search),
@@ -60,7 +60,7 @@ class AllCategoryComponents extends StatelessWidget {
                                     controller
                                         .deleteCategory(id: data.id)
                                         .then((_) {
-                                      controller.fetchCategory();
+                                      controller.fetchCategoryData();
                                     });
                                   }
                                 },
@@ -99,8 +99,8 @@ class AllCategoryComponents extends StatelessWidget {
                                       icon: const Icon(Icons.edit,
                                           color: Colors.blue),
                                       onPressed: () {
-                                        nameController.text = data.name;
-                                        controller.assignDefaultIndex();
+                                        categoryNameController.text = data.name;
+                                        controller.assignDefaultVal();
 
                                         Get.bottomSheet(
                                           Container(
@@ -114,7 +114,7 @@ class AllCategoryComponents extends StatelessWidget {
                                               ),
                                             ),
                                             child: Form(
-                                              key: formKey,
+                                              key: categoryKey,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -129,7 +129,8 @@ class AllCategoryComponents extends StatelessWidget {
                                                   ),
                                                   SizedBox(height: 20.h),
                                                   TextFormField(
-                                                    controller: nameController,
+                                                    controller:
+                                                        categoryNameController,
                                                     validator: (val) => val!
                                                             .isEmpty
                                                         ? "Category name is required"
@@ -152,11 +153,12 @@ class AllCategoryComponents extends StatelessWidget {
                                                   SizedBox(height: 20.h),
                                                   ElevatedButton(
                                                     onPressed: () {
-                                                      if (formKey.currentState!
+                                                      if (categoryKey
+                                                          .currentState!
                                                           .validate()) {
                                                         controller
-                                                            .updateCategory(
-                                                                category: data);
+                                                            .updateCategoryData(
+                                                                model: data);
                                                         Get.back();
                                                       }
                                                     },

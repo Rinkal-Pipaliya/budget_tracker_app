@@ -5,43 +5,49 @@ import 'package:get/get.dart';
 
 class SpendingController extends GetxController {
   String? mode;
-  DateTime? date;
+  DateTime? dateTime;
 
-  int? sIndex;
+  int? spendingIndex;
   int categoryId = 0;
 
   void getSpendingMode(String? value) {
     mode = value;
+
     update();
   }
 
-  void getSpendingDate({required DateTime? value}) {
-    date = value;
+  void getSpendingDate({required DateTime date}) {
+    dateTime = date;
+
     update();
   }
 
   void getSpendingIndex({required int index, required int id}) {
-    sIndex = index;
+    spendingIndex = index;
     categoryId = id;
     update();
   }
 
-  Future<void> addSpendingDate({required SpendingModel spending}) async {
-    int? res = await DBHelper.helper.insertSpending(spending: spending);
+  void assignDefaultValue() {
+    mode = dateTime = spendingIndex = null;
+
+    update();
+  }
+
+  Future<void> addSpendingData({required SpendingModel model}) async {
+    int? res = await DBHelper.helper.insertSpending(model: model);
 
     if (res != null) {
       Get.snackbar(
-        "Insert Success",
-        "Spending added successfully...!!: $res",
-        colorText: Colors.white,
-        backgroundColor: Colors.green,
+        "Inserted",
+        "spending inserted....",
+        backgroundColor: Colors.green.shade300,
       );
     } else {
       Get.snackbar(
-        "Error",
-        "Spending is not added..",
-        colorText: Colors.white,
-        backgroundColor: Colors.red,
+        "Failed",
+        "spending failed....",
+        backgroundColor: Colors.red.shade300,
       );
     }
   }

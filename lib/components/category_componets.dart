@@ -1,9 +1,11 @@
 import 'package:budget_tracker_app/controller/category_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-List<String> categoryImage = [
+List<String> categoryImages = [
   "assets/image/bill.png",
   "assets/image/case.png",
   "assets/image/communication.png",
@@ -20,16 +22,16 @@ List<String> categoryImage = [
   "assets/image/withdraw.png",
   "assets/image/other.png",
 ];
-List<String> categoryNames = [
-  "Bills",
+List<String> categoryName = [
+  "Bill",
   "Case",
   "Communication",
   "Deposit",
   "Food",
-  "Gifts",
+  "Gift",
   "Health",
-  "Movies",
-  "Finance",
+  "Movie",
+  "Rupee",
   "Salary",
   "Shopping",
   "Transport",
@@ -38,8 +40,8 @@ List<String> categoryNames = [
   "Other",
 ];
 
-GlobalKey<FormState> formKey = GlobalKey();
-TextEditingController nameController = TextEditingController();
+GlobalKey<FormState> categoryKey = GlobalKey<FormState>();
+TextEditingController categoryNameController = TextEditingController();
 
 class CategoryComponents extends StatelessWidget {
   const CategoryComponents({super.key});
@@ -48,142 +50,163 @@ class CategoryComponents extends StatelessWidget {
   Widget build(BuildContext context) {
     CategoryController controller = Get.put(CategoryController());
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Add Category",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: categoryKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Choose a Category",
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green.shade700,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Form(
-              key: formKey,
-              child: TextFormField(
-                controller: nameController,
+              SizedBox(height: 10.h),
+              Text(
+                "Enter category name and select an icon",
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.grey[700],
+                ),
+              ),
+              SizedBox(height: 20.h),
+              TextFormField(
+                controller: categoryNameController,
                 validator: (val) =>
                     val!.isEmpty ? "Category name is required" : null,
                 decoration: InputDecoration(
                   labelText: "Category Name",
-                  prefixIcon: const Icon(
-                    Icons.category,
-                    color: Colors.green,
-                  ),
-                  labelStyle: const TextStyle(fontSize: 16),
+                  hintText: "Enter category name",
+                  filled: true,
+                  fillColor: Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.green, width: 2),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14.h,
+                    horizontal: 16.w,
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: ListView.builder(
-                itemCount: categoryImage.length,
-                itemBuilder: (context, index) {
-                  return GetBuilder<CategoryController>(
-                    builder: (controller) {
-                      return GestureDetector(
-                        onTap: () {
-                          controller.getIndex(index: index);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            border: Border.all(
-                              color: controller.categoryIndex == index
-                                  ? Colors.green.shade500
-                                  : Colors.transparent,
+              SizedBox(height: 20.h),
+              Text(
+                "Select Icon",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green.shade700,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: categoryImages.length,
+                  itemBuilder: (ctx, index) =>
+                      GetBuilder<CategoryController>(builder: (context) {
+                    return GestureDetector(
+                      onTap: () {
+                        controller.getCategoryIndex(index: index);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 8.h),
+                        padding: EdgeInsets.all(12.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: (controller.categoryIndex == index)
+                                ? Colors.green.shade500
+                                : Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              blurRadius: 5,
+                              offset: const Offset(2, 2),
                             ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  categoryImage[index],
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Text(
-                                  categoryNames[index],
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              if (controller.categoryIndex == index)
-                                const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                ),
-                            ],
-                          ),
+                          ],
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState!.validate() &&
-                        controller.categoryIndex != null) {
-                      String name = nameController.text;
-                      String assetPath =
-                          categoryImage[controller.categoryIndex!];
-                      ByteData byteData = await rootBundle.load(assetPath);
-                      Uint8List image = byteData.buffer.asUint8List();
-
-                      controller.insertCategory(
-                        name: name,
-                        image: image,
-                      );
-                    } else {
-                      Get.snackbar(
-                        "Required",
-                        "Please select a category name and image",
-                        colorText: Colors.white,
-                        backgroundColor: Colors.red.shade900,
-                      );
-                    }
-                    nameController.clear();
-                    controller.assignDefaultIndex();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green.shade500,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text("Add Category"),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 40.h,
+                              width: 40.h,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(categoryImages[index]),
+                                  fit: BoxFit.contain,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Text(
+                                categoryName[index],
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ),
+                            if (controller.categoryIndex == index)
+                              const Icon(
+                                CupertinoIcons.check_mark_circled_solid,
+                                color: Colors.green,
+                              )
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.green.shade700,
+        label: const Text("Add Category"),
+        onPressed: () async {
+          if (categoryKey.currentState!.validate() &&
+              controller.categoryIndex != null) {
+            String name = categoryNameController.text;
+
+            String assetPath = categoryImages[controller.categoryIndex!];
+
+            ByteData byteData = await rootBundle.load(assetPath);
+
+            Uint8List image = byteData.buffer.asUint8List();
+
+            controller.addCategoryData(name: name, image: image);
+
+            Get.snackbar(
+              "Success",
+              "Category added successfully!",
+              colorText: Colors.white,
+              backgroundColor: Colors.green,
+            );
+          } else {
+            Get.snackbar(
+              "Error",
+              "Please provide category name and select an icon.",
+              colorText: Colors.white,
+              backgroundColor: Colors.redAccent,
+            );
+          }
+
+          categoryNameController.clear();
+          controller.assignDefaultVal();
+        },
       ),
     );
   }

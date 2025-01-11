@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.grey[100],
         title: const Text(
           "Budget Tracker",
           style: TextStyle(
@@ -30,8 +31,8 @@ class HomeScreen extends StatelessWidget {
         controller: controller.pageController,
         onPageChanged: (index) => controller.getIndex(index: index),
         children: const [
-          AllSpendingComponets(),
-          SpendingComponets(),
+          AllSpendingComponents(),
+          SpendingComponents(),
           AllCategoryComponents(),
           CategoryComponents(),
         ],
@@ -45,6 +46,7 @@ class HomeScreen extends StatelessWidget {
           },
           selectedItemColor: Colors.green.shade800,
           unselectedItemColor: Colors.black87,
+          backgroundColor: Colors.grey[100],
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.price_check),
